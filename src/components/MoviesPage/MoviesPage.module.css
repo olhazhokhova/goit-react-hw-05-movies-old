@@ -1,0 +1,44 @@
+.form {
+  display: flex;
+  padding: 20px;
+  max-width: 400px;
+}
+
+.input {
+  outline: 0;
+  min-width: 300px;
+  line-height: 30px;
+  border: 1px solid #e0e3e4;
+  border-radius: 5px 0 0 5px;
+  text-indent: 10px;
+}
+
+.button {
+  background-color: #256799;
+  border: 0 none;
+  outline: 0;
+  padding: 0 10px;
+  cursor: pointer;
+  color: #fff;
+  border-radius: 0 5px 5px 0;
+}
+
+.button:hover {
+  background-color: #2e76ad;
+}
+
+.unstyled {
+  padding: 0 20px;
+}
+
+.link {
+  text-decoration: none;
+  color: #256799;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+.notFound {
+  padding: 0 20px;
+}
