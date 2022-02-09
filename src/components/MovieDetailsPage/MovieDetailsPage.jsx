@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { useParams, NavLink, Link, Outlet } from 'react-router-dom';
+import { useParams, Link, Outlet, useLocation } from 'react-router-dom';
 import { BsArrowLeft } from 'react-icons/bs';
 import PropTypes from "prop-types";
 
@@ -14,6 +14,8 @@ const MovieDetailsPage = () => {
     const { movieId } = useParams();
     const [movie, setMovie] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    
+    const location = useLocation();
 
     useEffect(() => {
         setIsLoading(true);
@@ -25,7 +27,7 @@ const MovieDetailsPage = () => {
     const { title, release_date, vote_average, overview, genres } = movie;
     return (
         <>
-            <Link to="/movies" className={s.back}><BsArrowLeft />Back</Link>
+            <Link to={location?.state?.from ?? '/movies'} className={s.back}><BsArrowLeft />Back</Link>
             {isLoading && <Loader />}
             {movie &&
                 <div className={s.movie}>
@@ -52,10 +54,10 @@ const MovieDetailsPage = () => {
                         <h2>Additional information</h2>
                         <ul className={s.unstyled}>
                             <li>
-                                <NavLink to="cast" className={s.link} >Cast</NavLink>
+                                <Link to="cast" state={{ from: location }} className={s.link} >Cast</Link>
                             </li>
                             <li>
-                                <NavLink to="reviews" className={s.link} >Reviews</NavLink>
+                                <Link to="reviews" state={{ from: location }} className={s.link} >Reviews</Link>
                             </li>
                         </ul>
                         <Outlet />

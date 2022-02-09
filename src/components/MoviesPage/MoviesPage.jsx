@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { NavLink, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useLocation } from 'react-router-dom';
 import s from './MoviesPage.module.css';
 import PropTypes from "prop-types";
 import { fetchMoviesByQuery } from '../../services/api';
@@ -7,43 +7,34 @@ import Loader from '../Loader';
 
 const MoviesPage = () => {
 
-    const [query, setQuery] = useState('');
     const [movies, setMovies] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [notFound, setNotFound] = useState(false);
     const [searchParams, setSearchParams] = useSearchParams();
+    const location = useLocation();
+
+    const query = searchParams.get('query');
 
     useEffect(() => {
-        searchParams.get('query') && fetchMoviesByQuery(searchParams.get('query')).then(data => {
+        setNotFound(false);
+        query && fetchMoviesByQuery(query).then(data => {
             setMovies(data.results);
             data.total_results === 0 && setNotFound(true);
         }).finally(() => {
             setIsLoading(false);
         })
-    }, [searchParams])
-
-    const onInputChange = (e) => {
-        setQuery(e.currentTarget.value);
-    }
+    }, [query])
 
     const onSubmit = (e) => {
         e.preventDefault();
         setIsLoading(true);
-        setNotFound(false);
-        fetchMoviesByQuery(query).then(data => {
-            setMovies(data.results);
-            data.total_results === 0 && setNotFound(true);
-        }).finally(() => {
-            setIsLoading(false);
-        });
-        setSearchParams({ query });
-        setQuery('');
+        setSearchParams({ query: e.currentTarget.elements.query.value })
     }
 
     return (
         <>
             <form className={s.form} onSubmit={onSubmit}>
-                <input type="text" className={s.input} value={query} onChange={onInputChange} />
+                <input type="text" className={s.input} name="query" />
                 <button className={s.button}>Search</button>
             </form>
             {isLoading && <Loader />}
@@ -53,7 +44,7 @@ const MoviesPage = () => {
                         movies.map(({id, title, original_name}) => {
                             return (
                                 <li key={id}>
-                                    <NavLink to={`/movies/${id}`} className={s.link} >{ title ? title : original_name }</NavLink>
+                                    <Link to={`/movies/${id}`} state={{ from: location}} className={s.link} >{ title ? title : original_name }</Link>
                                 </li>
                             )
                         })
